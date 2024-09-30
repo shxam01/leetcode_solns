@@ -1,0 +1,41 @@
+class Solution {
+public:
+   vector<vector<string>>ans;
+    bool is_pal(string &s){
+        int st=0,end=s.size()-1;
+        while(st<end){
+            if(s[st]!=s[end]){
+                return false;
+            }
+            st++;
+            end--;
+        }
+        return true;
+    }
+
+    void solve(string &s,vector<string>&res,int index){
+        if(index==s.size()){
+            ans.push_back(res);
+            return;
+        }
+        string pal_str;
+        for(int i=index;i<s.size();i++){
+            pal_str+=s[i];
+            if(is_pal(pal_str)){
+                res.push_back(pal_str);
+                solve(s,res,i+1);
+                res.pop_back();
+            }
+        }
+    }
+    
+ 
+    
+    vector<vector<string>> partition(string s) {
+        vector<string>res;
+        solve(s,res,0);
+        return ans;
+    }
+
+    
+};
