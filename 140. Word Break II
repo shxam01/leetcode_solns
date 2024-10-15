@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<string>ans;
+    void fnc(string &s,vector<string>&temp,int idx,unordered_set<string>&dict_set){
+        if(idx==s.size()){
+            string st;
+            for(int i=0;i<temp.size();i++){
+                st+=temp[i];
+                if(i!=temp.size()-1){
+                    st+=" ";
+                }
+            }
+            ans.push_back(st);
+            return;
+        }
+        string word;
+        for(int i=idx;i<s.size();i++){
+            word+=s[i];
+            if(dict_set.find(word)!=dict_set.end()){
+                temp.push_back(word);
+                fnc(s,temp,i+1,dict_set);
+                temp.pop_back();
+            }
+        }
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        vector<string>temp;
+        unordered_set<string>dict_set;
+        for(int i=0;i<wordDict.size();i++){
+            dict_set.insert(wordDict[i]);
+        }
+        fnc(s,temp,0,dict_set);
+        return ans;
+
+    }
+};
