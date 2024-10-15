@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<string>ans;
+    void fnc(int idx,string &digits,string &curr_str,map<char,string>&mp){
+        if(idx==digits.size()){
+            ans.push_back(curr_str);
+            return;
+        }
+        char ch=digits[idx];
+        for(char letter:mp[ch]){
+            curr_str+=letter;
+            fnc(idx+1,digits,curr_str,mp);
+            curr_str.pop_back();
+        }
+    }
+
+    vector<string> letterCombinations(string digits) {
+        if(digits.size()==0){
+            return ans;
+        }
+        map<char,string>mp;
+        mp['0']="";
+        mp['1']="";
+        mp['2']="abc";
+        mp['3']="def";
+        mp['4']="ghi";
+        mp['5']="jkl";
+        mp['6']="mno";
+        mp['7']="pqrs";
+        mp['8']="tuv";
+        mp['9']="wxyz";
+        string curr_str;
+        fnc(0,digits,curr_str,mp);
+        return ans;
+    }
+};
