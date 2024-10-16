@@ -1,0 +1,35 @@
+class Solution {
+public:
+    string longestDiverseString(int a, int b, int c) {
+        string str;
+        unordered_map<char,int>freq;
+        freq['a']=a;
+        freq['b']=b;
+        freq['c']=c;
+        while(true){
+            vector<pair<int,char>>candidates;
+            if(freq['a']>0) candidates.push_back({freq['a'],'a'});
+            if(freq['b']>0) candidates.push_back({freq['b'],'b'});
+            if(freq['c']>0) candidates.push_back({freq['c'],'c'});
+            sort(candidates.rbegin(),candidates.rend());
+            bool added=false;
+            for(auto &candidate:candidates){
+                string ss;
+                for(int i=0;i<2;i++){
+                    ss+=candidate.second;
+                }
+                if(str.size()<2 || str.substr(str.size()-2,2)!=ss){
+                    str+=candidate.second;
+                    freq[candidate.second]--;
+                    added=true;
+                    break;
+                }
+            }
+            if(!added){
+                break;
+            }
+        }
+        return str;
+
+    }
+};
