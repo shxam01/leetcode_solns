@@ -1,0 +1,31 @@
+class Solution {
+public:
+    bool canMove(int x,int y,vector<vector<char>>&board){
+        int n=board.size();
+        int m=board[0].size();
+        return x>=0 && x<n && y>=0 && y<m;
+    }
+    bool helper(vector<vector<char>>&board,string word,int row,int col,int idx){
+        if(idx==word.size()) return true;
+        if(!canMove(row,col,board) || board[row][col]!=word[idx]) return false;
+        char ch=board[row][col];
+        board[row][col]='#';
+        bool found= helper(board,word,row+1,col,idx+1) ||
+        helper(board,word,row-1,col,idx+1) ||
+        helper(board,word,row,col+1,idx+1) ||
+        helper(board,word,row,col-1,idx+1) ;
+        board[row][col]=ch;
+        return found;
+        
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        int n=board.size();
+        int m=board[0].size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(helper(board,word,i,j,0)) return true;
+            }
+        }
+        return false;
+    }
+};
