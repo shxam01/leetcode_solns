@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<vector<int>>ans;
+    vector<int>candidates;
+    void helper(vector<int>candidates,vector<int>&temp,int n,int k,int sum,int idx){
+        if(temp.size()>k) return;
+        if(sum==n && temp.size()==k){
+            ans.push_back(temp);
+            return;
+        }
+        if(sum>n || idx==candidates.size()){
+            return;
+        }
+        
+        for(int i=idx;i<candidates.size();i++){
+            sum+=candidates[i];
+            temp.push_back(candidates[i]);
+            helper(candidates,temp,n,k,sum,i+1);
+            temp.pop_back();
+            sum-=candidates[i];
+        }
+    }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        
+        vector<int>temp;
+        for(int i=1;i<=9;i++){
+            candidates.push_back(i);
+        }
+        helper(candidates,temp,n,k,0,0);
+        return ans;
+
+    }
+};
