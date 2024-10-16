@@ -1,0 +1,26 @@
+class Solution {
+public:
+    
+
+    vector<vector<int>>subsets(vector<int>&nums){
+        int n=nums.size();
+        int subset_ct=(1<<n);
+        set<vector<int>>unique_subsets;
+        for(int mask=0;mask<subset_ct;mask++){
+            vector<int>subset;
+            for(int i=0;i<n;i++){
+                if((mask&(1<<i))!=0){
+                    subset.push_back(nums[i]);
+                }
+            }
+            sort(subset.begin(),subset.end());
+            unique_subsets.insert(subset);
+        }
+        vector<vector<int>>ans(unique_subsets.begin(),unique_subsets.end());
+        return ans;
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        auto sbst=subsets(nums);
+        return sbst;
+    }
+};
