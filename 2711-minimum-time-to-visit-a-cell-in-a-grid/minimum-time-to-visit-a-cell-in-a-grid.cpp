@@ -1,55 +1,55 @@
 class Solution {
 public:
-    int n,m;
-    typedef pair<int,pair<int,int>> p;
-    bool valid(int x,int y){
-        return x>=0 && x<n && y>=0 && y<m;
-    }
-    int solve(vector<vector<int>>&grid,int x_src,int y_src){
-        priority_queue<p,vector<p>,greater<p>>pq;
-        pq.push({0,{x_src,y_src}});
-        int dx[]={-1,1,0,0};
-        int dy[]={0,0,-1,1};
-        vector<vector<int>> dist(n, vector<int>(m, INT_MAX));
-        while(!pq.empty()){
-            auto pr=pq.top();
-            auto curr_time=pr.first;
-            auto coordinates=pr.second;
-            auto x=coordinates.first;
-            auto y=coordinates.second;
-            if(x==n-1 && y==m-1) return curr_time;
-            if (curr_time > dist[x][y]) continue;
-            pq.pop();
-            for(int i=0;i<4;i++){
-                int x_new=x+dx[i];
-                int y_new=y+dy[i];
-                if(valid(x_new,y_new)){
+    vector<vector<int>> direction{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    #define P pair<int, pair<int, int>>
 
-                    int next_time=curr_time+1;
-                    if(grid[x_new][y_new]>next_time){
-                        int wait_time=grid[x_new][y_new]-next_time;
-                        if(wait_time%2==0){
-                            next_time=grid[x_new][y_new];
-                        }else{
-                            next_time=grid[x_new][y_new]+1;
-                        }
-                    }
-                    if(next_time<dist[x_new][y_new]){
-                        // next_time=curr_time+1;
-                        dist[x_new][y_new]=next_time;
-                        pq.push({next_time,{x_new,y_new}});
-                    }
+    int minimumTime(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        if (grid[0][1] > 1 && grid[1][0] > 1)
+            return -1;
+        
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX));
+        priority_queue<P, vector<P>, greater<P>> pq;
+        
+        pq.push({grid[0][0], {0, 0}}); // Start at top-left corner
+        result[0][0] = 0;
+        while (!pq.empty()) {
+            // Get the current time, row, and column
+            int time = pq.top().first;
+            int row  = pq.top().second.first;
+            int col  = pq.top().second.second;
+            pq.pop();
+            
+            // Reached destination
+            if (row == m - 1 && col == n - 1)
+                return result[m-1][n-1];
+            
+            // Mark the current cell as visited
+            if (visited[row][col]) continue;
+            visited[row][col] = true;
+            
+            // Explore the neighboring cells
+            for (auto dir: direction) {
+                int r = row + dir[0];
+                int c = col + dir[1];
+                if (r < 0 || r >= m || c < 0 || c >= n || visited[r][c])
+                    continue;
+                
+                if (grid[r][c] <= time+1) {
+                    pq.push({time+1, {r, c}});
+                    result[r][c] = time+1;
+                } else if ((grid[r][c]-time)%2==0) {
+                    pq.push({grid[r][c]+1, {r, c}});
+                    result[r][c] = grid[r][c]+1;
+                } else {
+                    pq.push({grid[r][c], {r, c}});
+                    result[r][c] = grid[r][c];
                 }
             }
         }
         return -1;
-    }
-    int minimumTime(vector<vector<int>>& grid) {
-        n=grid.size();
-        m=grid[0].size();
-        if (grid[0][1] > 1 && grid[1][0] > 1) {
-          return -1;
-        }
-        return solve(grid,0,0);
     }
 };
