@@ -10,6 +10,26 @@ public:
             }
         }
     }
+    void bfs(int n,unordered_map<int,vector<int>>&adj,vector<bool>&vis,int i,int &v,int &e){
+        queue<int>q;
+        q.push(i);
+
+        vis[i]=true;
+        // v++;
+
+        while(!q.empty()){
+            auto node=q.front();
+            q.pop();
+            v++;
+            e+=adj[node].size();
+            for(auto child:adj[node]){
+                if(!vis[child]){
+                    vis[child]=true;
+                    q.push(child);
+                }
+            }
+        }
+    }
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
         unordered_map<int,vector<int>>adj;
         for(auto &edge:edges){
@@ -27,7 +47,8 @@ public:
             int v=0;
             int e=0;
            
-             dfs(n,adj,vis,i,v,e);
+            //  dfs(n,adj,vis,i,v,e);
+            bfs(n,adj,vis,i,v,e);
             
             if(v*(v-1)/2==e/2) ans++;
         }
