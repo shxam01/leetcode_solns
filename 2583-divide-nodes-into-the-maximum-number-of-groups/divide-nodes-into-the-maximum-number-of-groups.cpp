@@ -19,34 +19,43 @@ public:
 
     int bfs(int n,unordered_map<int,vector<int>>&adj,int source){
         // int n=adj.size();
-        vector<bool>vis(n+1,false);
+        int maxLevel=1;
+        vector<bool>vis(n,false);
+
         vis[source]=true;
+
         queue<pair<int,int>>q; // node, level -- starting with level 1
+
         q.push({source,1});
-        int maxLevel = 1;
 
         while(!q.empty()){
             auto [curr_node,curr_level]=q.front();
+
             q.pop();
-            maxLevel = max(maxLevel, curr_level);
+
+            maxLevel=max(maxLevel,curr_level);
 
             for(auto &ngbr:adj[curr_node]){
                 if(!vis[ngbr]){
                     vis[ngbr]=true;
+                    maxLevel=max(curr_level+1,maxLevel);
                     q.push({ngbr,curr_level+1});
                 }
             }
         }
+        // return
         return maxLevel; 
     }
 
-    void dfs(int n,unordered_map<int,vector<int>>&adj,int src,vector<bool>&vis,vector<int>&component){
+    void dfs(int n,unordered_map<int,vector<int>>&adj,int src,vector<bool>&vis,int &temp_ans,vector<int>&levels){
+        // vector<bool>vis(n,false);
+
         vis[src]=true;
-        component.push_back(src);
+        temp_ans=max(temp_ans,levels[src]);
 
         for(auto &v:adj[src]){
             if(!vis[v]){
-                dfs(n,adj,v,vis,component);
+                dfs(n,adj,v,vis,temp_ans,levels);
             }
         }
     }
@@ -62,6 +71,7 @@ public:
             adj[v].push_back(u);
           }
 
+        //   int n=adj.size();
           vector<int>color(n,-1);
           bool can_be_divided=true;
           for(int i=0;i<n;i++){
@@ -76,22 +86,26 @@ public:
             return -1;
           }
 
+          vector<int>levels(n,0);
+
+          for(int i=0;i<n;i++){
+            int level_for_curr_node=bfs(n,adj,i);
+            levels[i]=level_for_curr_node;
+          }
           vector<bool>vis(n,false);
           int ans=0;
-          
           for(int i=0;i<n;i++){
+            // int temp_ans=INT_MIN;
             if(!vis[i]){
-                vector<int> component;
-                dfs(n,adj,i,vis,component);
-                
-                int max_groups = 0;
-                for(auto node : component){
-                    max_groups = max(max_groups, bfs(n,adj,node));
-                }
-                ans += max_groups;
+                int temp_ans=INT_MIN;
+                dfs(n,adj,i,vis,temp_ans,levels);
+                ans +=temp_ans;
             }
+            
           }
 
           return ans;
+
+
     }
 };
