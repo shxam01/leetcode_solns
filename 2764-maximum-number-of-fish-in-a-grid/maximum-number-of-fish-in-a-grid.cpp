@@ -15,26 +15,28 @@ public:
 
         vis[x_src][y_src]=true;
 
-        queue<pair<int,pair<int,int>>>q;
+        queue<pair<int,int>>q;
 
         int curr=grid[x_src][y_src];
 
-        q.push({curr,{x_src,y_src}});
+        q.push({x_src,y_src});
+
+        ans +=grid[x_src][y_src];
 
         while(!q.empty()){
             auto &pr=q.front();
 
-            auto curr_fish=pr.first;
+            // auto curr_fish=pr.first;
 
-            auto coordinates=pr.second;
+            // auto coordinates=pr.first;
 
-            auto x=coordinates.first;
+            auto x=pr.first;
 
-            auto y=coordinates.second;
+            auto y=pr.second;
 
             q.pop();
 
-            ans=max(ans,curr_fish);
+            // ans=max(ans,curr_fish);
 
 
             for(int i=0;i<4;i++){
@@ -43,9 +45,11 @@ public:
 
                 if(valid(nx,ny) && !vis[nx][ny] && grid[nx][ny]>0){
                     vis[nx][ny]=true;
-                    int new_fish_count=curr_fish+grid[nx][ny];
+                    // int new_fish_count=curr_fish+grid[nx][ny];
 
-                    q.push({new_fish_count,{nx,ny}});
+                    ans +=grid[nx][ny];
+
+                    q.push({nx,ny});
                 }
             }
         }
@@ -77,6 +81,7 @@ public:
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
                 if(grid[i][j]>0){
+                    // ans=max(ans,bfs(grid,i,j,vis));
                     ans=max(ans,dfs(grid,i,j,vis));
                 }
             }
