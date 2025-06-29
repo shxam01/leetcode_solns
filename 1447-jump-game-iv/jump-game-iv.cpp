@@ -23,7 +23,7 @@ public:
 
             q.pop();
 
-            // if(dp[curr_idx]!=-1) return dp[curr_idx];
+            if(dp[curr_idx]!=-1) return dp[curr_idx];
 
             if(curr_idx==n-1){
                 return moves;
